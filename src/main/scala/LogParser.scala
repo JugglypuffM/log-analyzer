@@ -1,3 +1,5 @@
+import cats.MonadThrow
+import cats.implicits.*
 import domain.LogRecord
 
 import java.time.ZonedDateTime
@@ -10,7 +12,7 @@ object LogParser {
   private val dateTimeFormatter =
     DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z")
 
-  def parse(line: String): Option[LogRecord] = line match {
+  def parse[F[_]: MonadThrow](line: String): F[LogRecord] = line match {
     case logRegex(
           address,
           user,
@@ -23,23 +25,21 @@ object LogParser {
           referer,
           agent
         ) =>
-      Try(
-        Option(
-          LogRecord(
-            address,
-            user,
-            ZonedDateTime.parse(time, dateTimeFormatter),
-            method,
-            resource,
-            protocol,
-            status.toInt,
-            bytesSent.toInt,
-            referer,
-            agent
-          )
-        )
-      ).getOrElse(None)
-    case _ => None
+      for {
+        date <- Try(ZonedDateTime.parse(time, dateTimeFormatter)).liftTo[F]
+      } yield LogRecord(
+        address,
+        user,
+        date,
+        method,
+        resource,
+        protocol,
+        status.toInt,
+        bytesSent.toInt,
+        referer,
+        agent
+      )
+    case _ => MonadThrow[F].raiseError(MatchError(s"Failed to parse line '$line'"))
   }
 
 }
