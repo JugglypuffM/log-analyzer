@@ -9,5 +9,7 @@ libraryDependencies ++= Seq(
   "org.typelevel" %% "cats-effect-testing-scalatest" % "1.5.0" % Test,
 
   "co.fs2" %% "fs2-core" % "3.10.2",
-  "co.fs2" %% "fs2-io" % "3.10.2"
+  "co.fs2" %% "fs2-io" % "3.10.2",
+
+  "org.http4s" %% "http4s-core" % "0.23.27"
 )
