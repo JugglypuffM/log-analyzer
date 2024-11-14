@@ -58,5 +58,7 @@ class LogParserSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
         result shouldBe a [Left[MatchError, LogRecord]]
       }
     }
+    
+    
   }
 }
