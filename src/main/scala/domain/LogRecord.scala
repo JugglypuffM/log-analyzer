@@ -1,15 +1,18 @@
 package domain
 
+import org.http4s.{HttpVersion, Method, Status}
+
+import java.net.InetAddress
 import java.time.ZonedDateTime
 
 case class LogRecord(
-    address: String,
+    address: InetAddress,
     user: String,
     time: ZonedDateTime,
-    method: String,
+    method: Method,
     resource: String,
-    protocol: String,
-    status: Int,
+    protocol: HttpVersion,
+    status: Status,
     bytesSent: Int,
     referer: String,
     userAgent: String

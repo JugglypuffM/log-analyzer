@@ -1,6 +1,5 @@
 import cats.effect.{Async, Resource}
 import cats.implicits.*
-
 import fs2.io.file.Flags.Read
 import fs2.io.file.{Files, Path}
 import fs2.io.readInputStream

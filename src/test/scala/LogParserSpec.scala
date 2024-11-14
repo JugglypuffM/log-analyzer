@@ -1,9 +1,11 @@
 import cats.effect.IO
 import cats.effect.testing.scalatest.AsyncIOSpec
 import domain.LogRecord
+import org.http4s.{HttpVersion, Method, Status}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AsyncWordSpec
 
+import java.net.InetAddress
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -15,16 +17,16 @@ class LogParserSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
         """192.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "GET /home HTTP/1.1" 200 512 "-" "Mozilla/5.0""""
 
       val expectedLogRecord = LogRecord(
-        address = "192.168.0.1",
+        address = InetAddress.getByName("192.168.0.1"),
         user = "user1",
         time = ZonedDateTime.parse(
           "01/Jan/2023:12:34:56 +0000",
           DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z")
         ),
-        method = "GET",
+        method = Method.GET,
         resource = "/home",
-        protocol = "HTTP/1.1",
-        status = 200,
+        protocol = HttpVersion.`HTTP/1.1`,
+        status = Status.Ok,
         bytesSent = 512,
         referer = "-",
         userAgent = "Mozilla/5.0"
@@ -34,31 +36,83 @@ class LogParserSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
     }
 
     "return an error for an invalid log line" in {
-      val invalidLogLine = """invalid log line"""
+      val logLine = """invalid log line"""
 
-      LogParser.parse[IO](invalidLogLine).attempt.asserting { result =>
-        result shouldBe a [Left[MatchError, LogRecord]]
+      LogParser.parse[IO](logLine).attempt.asserting { result =>
+        result shouldBe a[Left[_, LogRecord]]
       }
     }
 
     "return an error for a log line with missing fields" in {
-      val missingFieldsLogLine =
+      val logLine =
         """192.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "GET /home HTTP/1.1" 200"""
 
-      LogParser.parse[IO](missingFieldsLogLine).attempt.asserting { result =>
-        result shouldBe a [Left[MatchError, LogRecord]]
+      LogParser.parse[IO](logLine).attempt.asserting { result =>
+        result shouldBe a[Left[_, LogRecord]]
+      }
+    }
+
+    "return an error for a log line with incorrect address format" in {
+      val logLine =
+        """600.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "GET /home HTTP/1.1" 200 512 "-" "Mozilla/5.0""""
+
+      LogParser.parse[IO](logLine).attempt.asserting { result =>
+        result shouldBe a[Left[_, LogRecord]]
       }
     }
 
     "return an error for a log line with incorrect date format" in {
-      val incorrectDateLogLine =
+      val logLine =
         """192.168.0.1 - user1 [01-01-2023:12:34:56] "GET /home HTTP/1.1" 200 512 "-" "Mozilla/5.0""""
 
-      LogParser.parse[IO](incorrectDateLogLine).attempt.asserting { result =>
-        result shouldBe a [Left[MatchError, LogRecord]]
+      LogParser.parse[IO](logLine).attempt.asserting { result =>
+        result shouldBe a[Left[_, LogRecord]]
       }
     }
-    
-    
+
+    "return an error for a log line with incorrect method name" in {
+      val logLine =
+        """192.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "n\///\.k+c /home HTTP/1.1" 200 512 "-" "Mozilla/5.0""""
+
+      LogParser.parse[IO](logLine).attempt.asserting { result =>
+        result shouldBe a[Left[_, LogRecord]]
+      }
+    }
+
+    "return an error for a log line with incorrect http version" in {
+      val logLine =
+        """192.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "GET /home HTTP/322" 200 512 "-" "Mozilla/5.0""""
+
+      LogParser.parse[IO](logLine).attempt.asserting { result =>
+        result shouldBe a[Left[_, LogRecord]]
+      }
+    }
+
+    "return an error for a log line with incorrect status code" in {
+      val logLine =
+        """192.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "GET /home HTTP/1.1" 999 512 "-" "Mozilla/5.0""""
+
+      LogParser.parse[IO](logLine).attempt.asserting { result =>
+        result shouldBe a[Left[_, LogRecord]]
+      }
+    }
+
+    "return an error for a log line with invalid status code" in {
+      val logLine =
+        """192.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "GET /home HTTP/1.1" abc 512 "-" "Mozilla/5.0""""
+
+      LogParser.parse[IO](logLine).attempt.asserting { result =>
+        result shouldBe a[Left[_, LogRecord]]
+      }
+    }
+
+    "return an error for a log line with invalid bytes value" in {
+      val incorrectDateLogLine =
+        """192.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "GET /home HTTP/1.1" 200 abc "-" "Mozilla/5.0""""
+
+      LogParser.parse[IO](incorrectDateLogLine).attempt.asserting { result =>
+        result shouldBe a[Left[_, LogRecord]]
+      }
+    }
   }
 }

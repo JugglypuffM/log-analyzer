@@ -7,7 +7,7 @@ class LogReaderSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
   "LogReader" should {
     "read from file" in {
       val testDataPath = getClass.getResource("logs.txt").getPath
-      
+
       val data = LogReader.fromFile[IO](
         testDataPath
       )
