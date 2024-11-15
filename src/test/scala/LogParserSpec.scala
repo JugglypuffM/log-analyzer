@@ -32,13 +32,15 @@ class LogParserSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
         userAgent = "Mozilla/5.0"
       )
 
-      LogParser.parse[IO](logLine).asserting(_ shouldBe expectedLogRecord)
+      LogParser
+        .parse[IO](logLine)
+        .asserting(_ shouldBe Right(expectedLogRecord))
     }
 
     "return an error for an invalid log line" in {
       val logLine = """invalid log line"""
 
-      LogParser.parse[IO](logLine).attempt.asserting { result =>
+      LogParser.parse[IO](logLine).asserting { result =>
         result shouldBe a[Left[_, LogRecord]]
       }
     }
@@ -47,7 +49,7 @@ class LogParserSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
       val logLine =
         """192.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "GET /home HTTP/1.1" 200"""
 
-      LogParser.parse[IO](logLine).attempt.asserting { result =>
+      LogParser.parse[IO](logLine).asserting { result =>
         result shouldBe a[Left[_, LogRecord]]
       }
     }
@@ -56,7 +58,7 @@ class LogParserSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
       val logLine =
         """600.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "GET /home HTTP/1.1" 200 512 "-" "Mozilla/5.0""""
 
-      LogParser.parse[IO](logLine).attempt.asserting { result =>
+      LogParser.parse[IO](logLine).asserting { result =>
         result shouldBe a[Left[_, LogRecord]]
       }
     }
@@ -65,7 +67,7 @@ class LogParserSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
       val logLine =
         """192.168.0.1 - user1 [01-01-2023:12:34:56] "GET /home HTTP/1.1" 200 512 "-" "Mozilla/5.0""""
 
-      LogParser.parse[IO](logLine).attempt.asserting { result =>
+      LogParser.parse[IO](logLine).asserting { result =>
         result shouldBe a[Left[_, LogRecord]]
       }
     }
@@ -74,7 +76,7 @@ class LogParserSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
       val logLine =
         """192.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "n\///\.k+c /home HTTP/1.1" 200 512 "-" "Mozilla/5.0""""
 
-      LogParser.parse[IO](logLine).attempt.asserting { result =>
+      LogParser.parse[IO](logLine).asserting { result =>
         result shouldBe a[Left[_, LogRecord]]
       }
     }
@@ -83,7 +85,7 @@ class LogParserSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
       val logLine =
         """192.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "GET /home HTTP/322" 200 512 "-" "Mozilla/5.0""""
 
-      LogParser.parse[IO](logLine).attempt.asserting { result =>
+      LogParser.parse[IO](logLine).asserting { result =>
         result shouldBe a[Left[_, LogRecord]]
       }
     }
@@ -92,7 +94,7 @@ class LogParserSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
       val logLine =
         """192.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "GET /home HTTP/1.1" 999 512 "-" "Mozilla/5.0""""
 
-      LogParser.parse[IO](logLine).attempt.asserting { result =>
+      LogParser.parse[IO](logLine).asserting { result =>
         result shouldBe a[Left[_, LogRecord]]
       }
     }
@@ -101,7 +103,7 @@ class LogParserSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
       val logLine =
         """192.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "GET /home HTTP/1.1" abc 512 "-" "Mozilla/5.0""""
 
-      LogParser.parse[IO](logLine).attempt.asserting { result =>
+      LogParser.parse[IO](logLine).asserting { result =>
         result shouldBe a[Left[_, LogRecord]]
       }
     }
@@ -110,7 +112,7 @@ class LogParserSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
       val incorrectDateLogLine =
         """192.168.0.1 - user1 [01/Jan/2023:12:34:56 +0000] "GET /home HTTP/1.1" 200 abc "-" "Mozilla/5.0""""
 
-      LogParser.parse[IO](incorrectDateLogLine).attempt.asserting { result =>
+      LogParser.parse[IO](incorrectDateLogLine).asserting { result =>
         result shouldBe a[Left[_, LogRecord]]
       }
     }
