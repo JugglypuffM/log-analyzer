@@ -1,12 +1,14 @@
 import cats.effect.IO
 import cats.effect.testing.scalatest.AsyncIOSpec
+import fs2.io.file.Path
+import io.LogReader
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AsyncWordSpec
 
 class LogReaderSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
   "LogReader" should {
     "read from file" in {
-      val testDataPath = getClass.getResource("logs.txt").getPath
+      val testDataPath = Path(getClass.getResource("logs.txt").getPath)
 
       val data = LogReader.fromFile[IO](
         testDataPath
