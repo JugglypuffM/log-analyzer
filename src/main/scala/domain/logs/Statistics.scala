@@ -18,6 +18,16 @@ case class Statistics(
     startDate: Option[ZonedDateTime],
     endDate: Option[ZonedDateTime]
 ) {
+  private def percentile(values: List[Int], p: Double): Int = {
+    val sorted = values.sorted
+    val index = (p / 100.0 * (sorted.size - 1)).round.toInt
+    sorted.lift(index).getOrElse(0)
+  }
+
+  private def sortDescending[R](map: Map[R, Int]): ListMap[R, Int] = ListMap(
+    map.toSeq.sortBy(-_._2): _*
+  )
+
   def generateReport(
       files: List[Path],
       urls: List[URL],
@@ -160,14 +170,4 @@ case class Statistics(
            |""".stripMargin
     }
   }
-
-  private def percentile(values: List[Int], p: Double): Int = {
-    val sorted = values.sorted
-    val index = (p / 100.0 * (sorted.size - 1)).round.toInt
-    sorted.lift(index).getOrElse(0)
-  }
-
-  private def sortDescending[R](map: Map[R, Int]): ListMap[R, Int] = ListMap(
-    map.toSeq.sortBy(-_._2): _*
-  )
 }
