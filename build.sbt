@@ -6,8 +6,6 @@ version := "1.0"
 
 scalaVersion := "3.3.3"
 
-mainClass := Some("Main")
-
 scalaVersion := Versions.scala3
 libraryDependencies ++= Seq(scalaTest, scalastic)
 
