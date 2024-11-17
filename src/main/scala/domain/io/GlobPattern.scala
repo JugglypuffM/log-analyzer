@@ -6,6 +6,8 @@ import fs2.io.file.Path
 import java.nio.file.{FileSystems, PathMatcher}
 
 case class GlobPattern(pattern: String) {
+  private val fileSystem = FileSystems.getDefault
+
   val (baseDirectory, pathMatcher): (Path, PathMatcher) =
     val normalizedInput = pattern.strip()
     val separatorIndex = normalizedInput.lastIndexOf("/")
@@ -25,5 +27,4 @@ case class GlobPattern(pattern: String) {
           fileSystem.getPathMatcher(s"glob:$skippedDirs$maybeMatcher")
 
         (baseDir, matcher)
-  private val fileSystem = FileSystems.getDefault
 }
