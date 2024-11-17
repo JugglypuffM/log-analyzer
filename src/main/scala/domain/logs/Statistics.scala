@@ -119,7 +119,9 @@ case class Statistics(
            |[cols="2,2"]
            ||===
            || Метрика              | Значение
-           || Начальная дата       | ${startDate.map(_.toString).getOrElse("-")}
+           || Начальная дата       | ${startDate
+            .map(_.toString)
+            .getOrElse("-")}
            || Конечная дата        | ${endDate.map(_.toString).getOrElse("-")}
            || Количество запросов  | $totalRequests
            || Средний размер ответа | ${averageResponseSize}b
