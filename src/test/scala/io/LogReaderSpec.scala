@@ -3,14 +3,14 @@ package io
 import cats.effect.IO
 import cats.effect.testing.scalatest.AsyncIOSpec
 import fs2.io.file.Path
-import io.LogReader
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AsyncWordSpec
+import java.net.URI
 
 class LogReaderSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
   "LogReader" should {
     "read from file" in {
-      val testDataPath = Path(getClass.getResource("logs.txt").getPath)
+      val testDataPath = Path("src/test/resources/logs.txt")
 
       val data = LogReader.fromFile[IO](
         testDataPath
@@ -31,7 +31,7 @@ class LogReaderSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
       val testDataUrl =
         "https://raw.githubusercontent.com/elastic/examples/master/Common%20Data%20Formats/nginx_logs/nginx_logs"
 
-      val data = LogReader.fromUrl[IO](testDataUrl)
+      val data = LogReader.fromUrl[IO](URI(testDataUrl).toURL)
 
       val expectedData: List[String] = List(
         "93.180.71.3 - - [17/May/2015:08:05:32 +0000] \"GET /downloads/product_1 HTTP/1.1\" 304 0 \"-\" \"Debian APT-HTTP/1.3 (0.8.16~exp12ubuntu10.21)\"",

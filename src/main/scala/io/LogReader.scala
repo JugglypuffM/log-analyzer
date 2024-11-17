@@ -8,12 +8,12 @@ import fs2.io.readInputStream
 import fs2.{Stream, text}
 
 import java.io.InputStream
-import java.net.URI
+import java.net.URL
 
 object LogReader {
-  def fromUrl[F[_]: Async](url: String): Stream[F, String] =
+  def fromUrl[F[_]: Async](url: URL): Stream[F, String] =
     val inputStreamResource: Resource[F, InputStream] =
-      Resource.fromAutoCloseable(URI(url).toURL.openStream().pure[F])
+      Resource.fromAutoCloseable(url.openStream().pure[F])
 
     Stream
       .resource(inputStreamResource)
