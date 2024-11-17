@@ -13,23 +13,23 @@ class StatisticSpec extends AnyWordSpec {
 
     "generate a Markdown report correctly" in {
       val stats = Statistics(
-        numberOfRequests = 10000,
+        numberOfRequests = 3,
         resourcesFrequency = Map(
-          "/index.html" -> 5000,
-          "/about.html" -> 2000,
-          "/contact.html" -> 1000
+          "/index.html" -> 1,
+          "/about.html" -> 1,
+          "/contact.html" -> 1
         ),
         codesFrequency = Map(
-          Status.Ok -> 8000,
-          Status.NotFound -> 1000,
-          Status.InternalServerError -> 500
+          Status.Ok -> 1,
+          Status.NotFound -> 1,
+          Status.InternalServerError -> 1
         ),
         addressFrequency = Map(
-          InetAddress.getByName("192.168.1.1") -> 400,
-          InetAddress.getByName("192.168.1.2") -> 600
+          InetAddress.getByName("192.168.1.1") -> 2,
+          InetAddress.getByName("192.168.1.2") -> 1
         ),
-        userAgentsFrequency = Map("Mozilla/5.0" -> 7000, "curl/7.68.0" -> 3000),
-        responseByteSizes = List(500, 800, 950, 1200),
+        userAgentsFrequency = Map("Mozilla/5.0" -> 2, "curl/7.68.0" -> 1),
+        responseByteSizes = List(500, 800, 950),
         startDate = Some(ZonedDateTime.parse("2024-11-01T00:00:00Z")),
         endDate = Some(ZonedDateTime.parse("2024-11-10T23:59:59Z"))
       )
@@ -48,39 +48,39 @@ class StatisticSpec extends AnyWordSpec {
           ||:---------------------:|-------------:|
           || Начальная дата       | 2024-11-01T00:00Z |
           || Конечная дата        | 2024-11-10T23:59:59Z |
-          || Количество запросов  | 10000 |
-          || Средний размер ответа | 0b |
-          || 95p размера ответа   | 1200b |
+          || Количество запросов  | 3 |
+          || Средний размер ответа | 750b |
+          || 95p размера ответа   | 950b |
           |
           |#### Запрашиваемые ресурсы
           |
           || Ресурс         | Количество   |
           ||:---------------:|-----------:|
-          || /index.html | 5000 |
-          || /about.html | 2000 |
-          || /contact.html | 1000 |
+          || /index.html | 1 |
+          || /about.html | 1 |
+          || /contact.html | 1 |
           |
           |#### Коды ответа
           |
           || Код | Имя           | Количество |
           ||:---:|:--------------:|---------:|
-          || 200 | OK | 8000 |
-          || 404 | Not Found | 1000 |
-          || 500 | Internal Server Error | 500 |
+          || 200 | OK | 1 |
+          || 404 | Not Found | 1 |
+          || 500 | Internal Server Error | 1 |
           |
           |#### Частые адреса
           |
           || Адрес          | Количество   |
           ||:---------------:|-----------:|
-          || /192.168.1.2 | 600 |
-          || /192.168.1.1 | 400 |
+          || /192.168.1.1 | 2 |
+          || /192.168.1.2 | 1 |
           |
           |#### Частые агенты
           |
           || Агент          | Количество   |
           ||:---------------:|-----------:|
-          || Mozilla/5.0 | 7000 |
-          || curl/7.68.0 | 3000 |
+          || Mozilla/5.0 | 2 |
+          || curl/7.68.0 | 1 |
           |
           |""".stripMargin
 
@@ -95,23 +95,23 @@ class StatisticSpec extends AnyWordSpec {
 
     "generate an AsciiDoc report correctly" in {
       val stats = Statistics(
-        numberOfRequests = 10000,
+        numberOfRequests = 3,
         resourcesFrequency = Map(
-          "/index.html" -> 5000,
-          "/about.html" -> 2000,
-          "/contact.html" -> 1000
+          "/index.html" -> 1,
+          "/about.html" -> 1,
+          "/contact.html" -> 1
         ),
         codesFrequency = Map(
-          Status.Ok -> 8000,
-          Status.NotFound -> 1000,
-          Status.InternalServerError -> 500
+          Status.Ok -> 1,
+          Status.NotFound -> 1,
+          Status.InternalServerError -> 1
         ),
         addressFrequency = Map(
-          InetAddress.getByName("192.168.1.1") -> 400,
-          InetAddress.getByName("192.168.1.2") -> 600
+          InetAddress.getByName("192.168.1.1") -> 2,
+          InetAddress.getByName("192.168.1.2") -> 1
         ),
-        userAgentsFrequency = Map("Mozilla/5.0" -> 7000, "curl/7.68.0" -> 3000),
-        responseByteSizes = List(500, 800, 950, 1200),
+        userAgentsFrequency = Map("Mozilla/5.0" -> 2, "curl/7.68.0" -> 1),
+        responseByteSizes = List(500, 800, 950),
         startDate = Some(ZonedDateTime.parse("2024-11-01T00:00:00Z")),
         endDate = Some(ZonedDateTime.parse("2024-11-10T23:59:59Z"))
       )
@@ -133,9 +133,9 @@ class StatisticSpec extends AnyWordSpec {
           || Метрика              | Значение
           || Начальная дата       | 2024-11-01T00:00Z
           || Конечная дата        | 2024-11-10T23:59:59Z
-          || Количество запросов  | 10000
-          || Средний размер ответа | 0b
-          || 95p размера ответа   | 1200b
+          || Количество запросов  | 3
+          || Средний размер ответа | 750b
+          || 95p размера ответа   | 950b
           ||===
           |
           |=== Запрашиваемые ресурсы
@@ -143,9 +143,9 @@ class StatisticSpec extends AnyWordSpec {
           |[cols="2,2"]
           ||===
           || Ресурс         | Количество
-          || /index.html | 5000
-          || /about.html | 2000
-          || /contact.html | 1000
+          || /index.html | 1
+          || /about.html | 1
+          || /contact.html | 1
           ||===
           |
           |=== Коды ответа
@@ -153,9 +153,9 @@ class StatisticSpec extends AnyWordSpec {
           |[cols="3,2,2"]
           ||===
           || Код | Имя          | Количество
-          || 200 | OK | 8000
-          || 404 | Not Found | 1000
-          || 500 | Internal Server Error | 500
+          || 200 | OK | 1
+          || 404 | Not Found | 1
+          || 500 | Internal Server Error | 1
           ||===
           |
           |=== Частые адреса
@@ -163,8 +163,8 @@ class StatisticSpec extends AnyWordSpec {
           |[cols="2,2"]
           ||===
           || Адрес          | Количество
-          || /192.168.1.2 | 600
-          || /192.168.1.1 | 400
+          || /192.168.1.1 | 2
+          || /192.168.1.2 | 1
           ||===
           |
           |=== Частые агенты
@@ -172,8 +172,8 @@ class StatisticSpec extends AnyWordSpec {
           |[cols="2,2"]
           ||===
           || Агент          | Количество
-          || Mozilla/5.0 | 7000
-          || curl/7.68.0 | 3000
+          || Mozilla/5.0 | 2
+          || curl/7.68.0 | 1
           ||===
           |""".stripMargin
 

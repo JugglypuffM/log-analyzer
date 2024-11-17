@@ -26,7 +26,7 @@ case class Statistics(
     val totalRequests = numberOfRequests
     val averageResponseSize =
       if (responseByteSizes.nonEmpty)
-        responseByteSizes.sum / numberOfRequests
+        responseByteSizes.map(_.toLong).sum / numberOfRequests
       else 0
     val p95ResponseSize = percentile(responseByteSizes, 95)
     val mostPopularResources = sortDescending(resourcesFrequency).take(5)
