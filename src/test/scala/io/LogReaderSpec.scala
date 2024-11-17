@@ -5,6 +5,7 @@ import cats.effect.testing.scalatest.AsyncIOSpec
 import fs2.io.file.Path
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AsyncWordSpec
+
 import java.net.URI
 
 class LogReaderSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {

@@ -2,7 +2,7 @@ package logs.processing
 
 import cats.Applicative
 import cats.implicits.*
-import domain.LogRecord
+import domain.logs.LogRecord
 import org.http4s.{HttpVersion, Method, Status}
 
 import java.net.InetAddress

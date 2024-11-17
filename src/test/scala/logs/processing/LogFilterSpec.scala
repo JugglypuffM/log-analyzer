@@ -1,6 +1,6 @@
 package logs.processing
 
-import domain.LogRecord
+import domain.logs.LogRecord
 import org.http4s.{HttpVersion, Method, Status}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec

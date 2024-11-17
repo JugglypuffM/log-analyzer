@@ -1,4 +1,4 @@
-package domain
+package domain.io
 
 enum Format {
   case Markdown, AsciiDoc

@@ -1,4 +1,4 @@
-package domain
+package domain.logs
 
 import org.http4s.{HttpVersion, Method, Status}
 

@@ -2,7 +2,7 @@ package logs.processing
 
 import cats.effect.IO
 import cats.effect.testing.scalatest.AsyncIOSpec
-import domain.LogRecord
+import domain.logs.LogRecord
 import logs.processing.LogParser
 import org.http4s.{HttpVersion, Method, Status}
 import org.scalatest.matchers.should.Matchers

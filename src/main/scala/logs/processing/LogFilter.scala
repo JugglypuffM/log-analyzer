@@ -1,6 +1,7 @@
 package logs.processing
 
-import domain.{Config, LogRecord}
+import domain.io.Config
+import domain.logs.LogRecord
 import fs2.Stream
 import org.http4s.{HttpVersion, Method, Status}
 
@@ -24,7 +25,7 @@ object LogFilter {
   ): Boolean =
     val logTime = logZonedTime.toLocalDate
     maybeFrom.forall(from => logTime.isAfter(from) || logTime.isEqual(from)) &&
-      maybeTo.forall(to => logTime.isBefore(to) || logTime.isEqual(to))
+    maybeTo.forall(to => logTime.isBefore(to) || logTime.isEqual(to))
 
   def matchesField(
       maybeField: Option[String],
@@ -37,7 +38,8 @@ object LogFilter {
           Try(InetAddress.getByName(value) == record.address).getOrElse(false)
         case "user" => value.strip() == record.user
         case "method" =>
-          Try(Method.fromString(value.toUpperCase) == Right(record.method)).getOrElse(false)
+          Try(Method.fromString(value.toUpperCase) == Right(record.method))
+            .getOrElse(false)
         case "resource" => value.strip() == record.resource
         case "protocol" =>
           Try(HttpVersion.fromString(value) == Right(record.protocol))

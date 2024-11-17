@@ -2,7 +2,7 @@ package io
 
 import cats.Applicative
 import cats.implicits.*
-import domain.{Config, Format}
+import domain.io.{Config, Format, GlobPattern}
 import fs2.io.file.Path
 import scopt.OParser
 
@@ -21,12 +21,22 @@ object ConfigReader {
       DateTimeFormatter.ISO_DATE
 
     val methodList =
-      List("address", "user", "method", "resource", "protocol", "status", "bytesSent", "referer", "useragent")
+      List(
+        "address",
+        "user",
+        "method",
+        "resource",
+        "protocol",
+        "status",
+        "bytesSent",
+        "referer",
+        "useragent"
+      )
 
     def validateFilePath(input: String): Either[String, Unit] =
-      GlobFileFinder.getBaseDirAndPattern(input) match
-        case Right(_) => success
-        case Left(_)  => failure(s"Failed to parse path $input")
+      Try(GlobPattern(input))
+        .map(_ => success)
+        .getOrElse(failure(s"Failed to parse path $input"))
 
     def validateUrl(input: String): Either[String, Unit] =
       Try(URI(input).toURL)
@@ -44,25 +54,23 @@ object ConfigReader {
         .getOrElse(failure(s"No available format with name $input"))
 
     def validateField(input: String): Either[String, Unit] =
-      if(methodList.contains(input.strip().toLowerCase())) success
-      else failure("No such field in record, or time was specified, which is handled by options --from and --to")
+      if (methodList.contains(input.strip().toLowerCase())) success
+      else
+        failure(
+          "No such field in record, or time was specified, which is handled by options --from and --to"
+        )
 
     OParser.sequence(
       programName("analyzer"),
       opt[String]("file")
+        .unbounded()
         .validate(validateFilePath)
-        .action((x, c) =>
-          val (baseDir, pattern) = GlobFileFinder
-            .getBaseDirAndPattern(x)
-            .getOrElse(
-              (Path("."), FileSystems.getDefault.getPathMatcher(s"glob:*.log"))
-            )
-          c.copy(file = Some((baseDir, pattern)))
-        )
+        .action((x, c) => c.copy(files = GlobPattern(x) :: c.files))
         .text("Path to log file, may be a glob-pattern"),
       opt[String]("url")
+        .unbounded()
         .validate(validateUrl)
-        .action((x, c) => c.copy(url = Some(URI(x).toURL)))
+        .action((x, c) => c.copy(urls = URI(x).toURL :: c.urls))
         .text("Get logs from Url"),
       opt[String]("from")
         .validate(validateTime)
@@ -98,11 +106,9 @@ object ConfigReader {
         }
       },
       checkConfig { c =>
-        (c.file, c.url) match
-          case (Some(_), Some(_)) =>
-            failure("Only one log source should be provided")
-          case (None, None) => failure("No log source provided")
-          case _            => success
+        (c.files, c.urls) match
+          case (Nil, Nil) => failure("No log sources provided")
+          case _          => success
       }
     )
   }
