@@ -120,7 +120,7 @@ class GlobFileFinderSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
         .map { result =>
           result should contain allElementsOf List(
             baseDir.resolve("logs.txt"),
-            baseDir.resolve("logs_4.txt"),
+            baseDir.resolve("logs_4.txt")
           )
         }
     }
@@ -153,7 +153,7 @@ class GlobFileFinderSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
             baseDir.resolve("dir1/logs_1.txt"),
             baseDir.resolve("dir2/logs_2.txt"),
             baseDir.resolve("dir1/dir3/logs_3.txt"),
-            baseDir.resolve("dir1/logs_5.txt"),
+            baseDir.resolve("dir1/logs_5.txt")
           )
         }
     }

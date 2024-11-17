@@ -11,13 +11,7 @@ import java.io.InputStream
 import java.net.URI
 
 object LogReader {
-  def fromFile[F[_]: Async](path: Path): Stream[F, String] =
-    Files[F]
-      .readAll(path, 4096, Read)
-      .through(text.utf8.decode)
-      .through(text.lines)
-
-  def fromUrl[F[_]: Async](url: String): Stream[F, String] = 
+  def fromUrl[F[_]: Async](url: String): Stream[F, String] =
     val inputStreamResource: Resource[F, InputStream] =
       Resource.fromAutoCloseable(URI(url).toURL.openStream().pure[F])
 
@@ -26,7 +20,13 @@ object LogReader {
       .flatMap(is => readInputStream(is.pure[F], 4096))
       .through(text.utf8.decode)
       .through(text.lines)
-  
+
   def fromFileStream[F[_]: Async](paths: Stream[F, Path]): Stream[F, String] =
     paths.flatMap(fromFile)
+
+  def fromFile[F[_]: Async](path: Path): Stream[F, String] =
+    Files[F]
+      .readAll(path, 4096, Read)
+      .through(text.utf8.decode)
+      .through(text.lines)
 }
