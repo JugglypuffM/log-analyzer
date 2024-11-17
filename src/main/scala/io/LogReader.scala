@@ -27,6 +27,6 @@ object LogReader {
       .through(text.utf8.decode)
       .through(text.lines)
   
-  def fromFiles[F[_]: Async](paths: List[Path]): Stream[F, String] =
-    Stream.emits(paths).flatMap(fromFile)
+  def fromFileStream[F[_]: Async](paths: Stream[F, Path]): Stream[F, String] =
+    paths.flatMap(fromFile)
 }

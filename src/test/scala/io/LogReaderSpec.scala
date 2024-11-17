@@ -1,3 +1,5 @@
+package io
+
 import cats.effect.IO
 import cats.effect.testing.scalatest.AsyncIOSpec
 import fs2.io.file.Path
