@@ -1,3 +1,5 @@
+package logs.processing
+
 import cats.Applicative
 import cats.implicits.*
 import domain.LogRecord
