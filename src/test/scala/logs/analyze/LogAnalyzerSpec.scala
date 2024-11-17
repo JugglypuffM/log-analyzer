@@ -20,7 +20,7 @@ class LogAnalyzerSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
     "collect statistics correctly from a stream of log records" in {
       val logs = Stream(
         LogRecord(
-          InetAddress.getByName("127.0.0.1"),
+          InetAddress.getByName("126.0.0.1"),
           "user1",
           ZonedDateTime.now(),
           Method.GET,
@@ -29,7 +29,7 @@ class LogAnalyzerSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
           Ok,
           200,
           "referer1",
-          "Mozilla/5.0"
+          "Mozilla/4.0"
         ),
         LogRecord(
           InetAddress.getByName("127.0.0.1"),
@@ -41,10 +41,10 @@ class LogAnalyzerSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
           NotFound,
           300,
           "referer2",
-          "Mozilla/5.0"
+          "Mozilla/3.0"
         ),
         LogRecord(
-          InetAddress.getByName("127.0.0.1"),
+          InetAddress.getByName("128.0.0.1"),
           "user1",
           ZonedDateTime.now(),
           Method.GET,
@@ -64,6 +64,8 @@ class LogAnalyzerSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
           numberOfRequests = 3,
           resourcesFrequency = Map("/about" -> 1, "/home" -> 2),
           codesFrequency = Map(NotFound -> 1, Ok -> 2),
+          addressFrequency =  Map(InetAddress.getByName("126.0.0.1") -> 1,InetAddress.getByName("127.0.0.1") -> 1, InetAddress.getByName("128.0.0.1") -> 1),
+          userAgentsFrequency = Map("Mozilla/4.0" -> 1, "Mozilla/3.0" -> 1, "Mozilla/5.0" -> 1),
           responseByteSizes = List(150, 300, 200)
         )
       }
@@ -79,6 +81,8 @@ class LogAnalyzerSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
           numberOfRequests = 0,
           resourcesFrequency = Map.empty,
           codesFrequency = Map.empty,
+          addressFrequency =  Map.empty,
+          userAgentsFrequency = Map.empty,
           responseByteSizes = List.empty
         )
       }
@@ -131,6 +135,8 @@ class LogAnalyzerSpec extends AsyncWordSpec with AsyncIOSpec with Matchers {
           numberOfRequests = 3,
           resourcesFrequency = Map("/home" -> 3),
           codesFrequency = Map(Ok -> 3),
+          addressFrequency =  Map(InetAddress.getByName("127.0.0.1") -> 3),
+          userAgentsFrequency = Map("Mozilla/5.0" -> 3),
           responseByteSizes = List(200, 200, 200)
         )
       }
