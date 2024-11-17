@@ -1,5 +1,13 @@
 import Dependencies.{scalaTest, scalastic}
 
+name := "log-analyzer"
+
+version := "1.0"
+
+scalaVersion := "3.3.3"
+
+mainClass := Some("Main")
+
 scalaVersion := Versions.scala3
 libraryDependencies ++= Seq(scalaTest, scalastic)
 
@@ -11,5 +19,7 @@ libraryDependencies ++= Seq(
   "co.fs2" %% "fs2-core" % "3.10.2",
   "co.fs2" %% "fs2-io" % "3.10.2",
 
-  "org.http4s" %% "http4s-core" % "0.23.27"
+  "org.http4s" %% "http4s-core" % "0.23.27",
+
+  "com.github.scopt" %% "scopt" % "4.1.0"
 )
