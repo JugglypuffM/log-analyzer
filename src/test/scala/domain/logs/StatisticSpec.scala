@@ -6,6 +6,7 @@ import org.http4s.Status
 import org.scalatest.wordspec.AnyWordSpec
 
 import java.net.{InetAddress, URI}
+import java.nio.charset.StandardCharsets
 import java.time.ZonedDateTime
 
 class StatisticSpec extends AnyWordSpec {
@@ -90,7 +91,11 @@ class StatisticSpec extends AnyWordSpec {
         Format.Markdown
       )
 
-      assert(actualMarkdown == expectedMarkdown)
+      assert(
+        actualMarkdown.getBytes(
+          StandardCharsets.UTF_8
+        ) sameElements expectedMarkdown.getBytes(StandardCharsets.UTF_8)
+      )
     }
 
     "generate an AsciiDoc report correctly" in {
@@ -183,7 +188,11 @@ class StatisticSpec extends AnyWordSpec {
         Format.AsciiDoc
       )
 
-      assert(actualAsciiDoc == expectedAsciiDoc)
+      assert(
+        actualAsciiDoc.getBytes(
+          StandardCharsets.UTF_8
+        ) sameElements expectedAsciiDoc.getBytes(StandardCharsets.UTF_8)
+      )
     }
 
     "generate a correct Markdown report for empty statistics" in {
@@ -248,7 +257,11 @@ class StatisticSpec extends AnyWordSpec {
         Format.Markdown
       )
 
-      assert(actualMarkdown == expectedMarkdown)
+      assert(
+        actualMarkdown.getBytes(
+          StandardCharsets.UTF_8
+        ) sameElements expectedMarkdown.getBytes(StandardCharsets.UTF_8)
+      )
     }
 
     "generate a correct AsciiDoc report for empty statistics" in {
@@ -324,7 +337,11 @@ class StatisticSpec extends AnyWordSpec {
         Format.AsciiDoc
       )
 
-      assert(actualAsciiDoc == expectedAsciiDoc)
+      assert(
+        actualAsciiDoc.getBytes(
+          StandardCharsets.UTF_8
+        ) sameElements expectedAsciiDoc.getBytes(StandardCharsets.UTF_8)
+      )
     }
   }
 }

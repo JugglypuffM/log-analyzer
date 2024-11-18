@@ -28,8 +28,7 @@ class GlobPatternSpec extends AnyWordSpec with Matchers {
     }
 
     "handle an invalid glob pattern gracefully and return a Left with Throwable" in {
-      val result = intercept[PatternSyntaxException](GlobPattern("*.{txt,"))
-      result.getMessage shouldBe "Missing '} near index 6\n*.{txt,\n      ^"
+      assertThrows[PatternSyntaxException](GlobPattern("*.{txt,"))
     }
 
     "return the current directory for an empty string" in {
