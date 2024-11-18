@@ -20,7 +20,7 @@ object Main extends IOApp {
       dataStream = dataFromFiles ++ dataFromUrls
 
       logStream = dataStream
-        .evalMap(LogParser.parse[IO])
+        .parEvalMap(6)(LogParser.parse[IO])
         .collect { case Right(log) => log }
         .through(LogFilter.filterWithConfig(config))
       stats <- LogAnalyzer.collectStatistics(logStream)
