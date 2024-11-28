@@ -51,7 +51,8 @@ case class Statistics(
             || Тип     | Значение             |
             ||:--------:|:-------------------|
             |${(files.map(file => s"| Файл | $file |") :::
-            urls.map(url => s"| URL | $url |")).mkString("\n|")}
+            urls.map(url => s"| URL | $url |"))
+            .mkString(s"${System.lineSeparator()}|")}
             |
             |#### Общая информация
             |
@@ -73,7 +74,7 @@ case class Statistics(
             ||:---------------:|-----------:|
             |${mostPopularResources
             .map { case (resource, count) => s"| $resource | $count |" }
-            .mkString("\n|")}
+            .mkString(s"${System.lineSeparator()}|")}
             |
             |#### Коды ответа
             |
@@ -83,7 +84,7 @@ case class Statistics(
             .map { case (status, count) =>
               s"| ${status.code} | ${status.reason} | $count |"
             }
-            .mkString("\n|")}
+            .mkString(s"${System.lineSeparator()}|")}
             |
             |#### Частые адреса
             |
@@ -91,7 +92,7 @@ case class Statistics(
             ||:---------------:|-----------:|
             |${frequentAddresses
             .map { case (address, count) => s"| $address | $count |" }
-            .mkString("\n|")}
+            .mkString(s"${System.lineSeparator()}|")}
             |
             |#### Частые агенты
             |
@@ -99,7 +100,7 @@ case class Statistics(
             ||:---------------:|-----------:|
             |${frequentUserAgents
             .map { case (agent, count) => s"| $agent | $count |" }
-            .mkString("\n|")}
+            .mkString(s"${System.lineSeparator()}|")}
             |
             |""".stripMargin
 
@@ -111,7 +112,7 @@ case class Statistics(
            || Тип     | Значение
            |${(files.map(file => s"| Файл | $file") ::: urls.map(url =>
             s"| URL | $url"
-          )).mkString("\n|")}
+          )).mkString(s"${System.lineSeparator()}|")}
            ||===
            |
            |=== Общая информация
@@ -135,7 +136,7 @@ case class Statistics(
            || Ресурс         | Количество
            |${mostPopularResources
             .map { case (resource, count) => s"| $resource | $count" }
-            .mkString("\n|")}
+            .mkString(s"${System.lineSeparator()}|")}
            ||===
            |
            |=== Коды ответа
@@ -147,7 +148,7 @@ case class Statistics(
             .map { case (status, count) =>
               s"| ${status.code} | ${status.reason} | $count"
             }
-            .mkString("\n|")}
+            .mkString(s"${System.lineSeparator()}|")}
            ||===
            |
            |=== Частые адреса
@@ -157,7 +158,7 @@ case class Statistics(
            || Адрес          | Количество
            |${frequentAddresses
             .map { case (address, count) => s"| $address | $count" }
-            .mkString("\n|")}
+            .mkString(s"${System.lineSeparator()}|")}
            ||===
            |
            |=== Частые агенты
@@ -167,7 +168,7 @@ case class Statistics(
            || Агент          | Количество
            |${frequentUserAgents
             .map { case (agent, count) => s"| $agent | $count" }
-            .mkString("\n|")}
+            .mkString(s"${System.lineSeparator()}|")}
            ||===
            |""".stripMargin
     }
