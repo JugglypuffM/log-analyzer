@@ -8,6 +8,7 @@ Usage: analyzer [options]
   --from <value>    Дата начала периода фильтрации логов
   --to <value>      Дата окончания периода фильтрации логов
   --format <value>  Формат отчета об анализе логов Markdown(md) или AsciiDoc(adoc)
-  --field <value>   Фильтрация логов по полям: address, user, method, resource, protocol, status, bytesSent, referer, useragent
+  --field <value>   Фильтрация логов по полям: address, user, method, resource,
+                    protocol, status, bytesSent, referer, useragent
   --value <value>   Значение фильтрации поля
 ```
